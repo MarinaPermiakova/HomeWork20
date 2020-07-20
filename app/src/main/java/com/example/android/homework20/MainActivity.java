@@ -3,12 +3,10 @@ package com.example.android.homework20;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -26,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
     private static String TEXT = "note_text";
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
+    private List<Map<String, String>> values;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +41,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         final ListView list = findViewById(R.id.list);
-        final List<Map<String, String>> values = prepareContent();
+
+        values = prepareContent();
         final BaseAdapter listContentAdapter = createAdapter(values);
         list.setAdapter(listContentAdapter);
 
@@ -57,9 +58,8 @@ public class MainActivity extends AppCompatActivity {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                final List<Map<String, String>> values = prepareContent();
-                final BaseAdapter listContentAdapter = createAdapter(values);
-                list.setAdapter(listContentAdapter);
+                values.clear();
+                values.addAll(prepareContent());
                 mSwipeRefreshLayout.setRefreshing(false);
                 listContentAdapter.notifyDataSetChanged();
             }
